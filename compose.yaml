@@ -1,0 +1,20 @@
+services:
+  directory:
+    image: directory
+    build: .
+    hostname: directory
+    command: /bin/sh /mnt/scripts/start.sh
+    volumes:
+    - .:/mnt:ro
+    - directory-venv:/run/directory/.venv
+    - directory-node:/run/directory/assets/node_modules
+    - directory-cert:/run/cert
+    ports:
+      - "4500:4500"
+      - "443:443"
+
+# Cache for .venv, assets/node_modules and SSL cert
+volumes:
+  directory-venv:
+  directory-node:
+  directory-cert:

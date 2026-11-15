@@ -1,0 +1,56 @@
+{
+  "name": "Directory",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/run/directory,type=bind",
+  "workspaceFolder": "/run/directory",
+  "remoteUser": "root",
+  "forwardPorts": [4500, 443],
+  "portsAttributes": {
+    "443": {
+      "protocol": "https",
+      "label": "Directory (sign in here)",
+      "onAutoForward": "notify"
+    },
+    "4500": {
+      "protocol": "https",
+      "label": "Directory",
+      "onAutoForward": "notify"
+    }
+  },
+  "overrideCommand": true,
+  "initializeCommand": "test -f .env || touch .env",
+  "runArgs": ["--env-file", "${localWorkspaceFolder}/.env"],
+  "postCreateCommand": "sh .devcontainer/postCreate.sh",
+  "mounts": [
+    "source=directory-venv,target=/run/directory/.venv,type=volume",
+    "source=directory-node,target=/run/directory/assets/node_modules,type=volume",
+    "source=directory-cert,target=/run/cert,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "svelte.svelte-vscode",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/run/directory/.venv/bin/python",
+        "python.analysis.typeCheckingMode": "standard",
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.formatOnSave": true
+        },
+        "[svelte]": {
+          "editor.defaultFormatter": "svelte.svelte-vscode",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  }
+}
