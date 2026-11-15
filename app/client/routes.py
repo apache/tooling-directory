@@ -58,7 +58,7 @@ async def e2e_login(uid: str) -> werkzeug.wrappers.Response:
 
     `?roles=secretary,admin` grants those roles to this session alone. They are kept in the
     session's own metadata rather than on anything shared, so one login cannot leak a role into
-    the next one - which BAT's test login, granting onto a shared directory, did. A name that is not
+    the next one - which BAT's test login, granting onto a shared roster object, did. A name that is not
     a role is ignored, as `access.roles_of` ignores it.
     """
     roles = [name.strip() for name in quart.request.args.get("roles", "").split(",") if name.strip()]

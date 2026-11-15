@@ -15,7 +15,7 @@ Browser-level tests that drive the real app, signed in as whoever a spec needs.
   `?roles=secretary,admin` grants those roles (`app/models/role.py`) to that
   session alone. They are kept in the session's own metadata, so a role one
   spec grants cannot leak into another - which BAT's test login, granting onto
-  a shared directory, did. A name that is not a role is ignored.
+  a shared roster object, did. A name that is not a role is ignored.
 - **One server serves the whole run**, so a spec that changes state leaves it
   changed for the specs after it. Give each test a uid of its own. BAT grew a
   supervisor that restarts the server for each spec file and a pool of servers

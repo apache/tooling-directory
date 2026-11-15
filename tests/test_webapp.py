@@ -65,6 +65,12 @@ async def test_home_tells_somebody_without_a_role_why_there_is_no_directory(auth
     assert 'data-testid="directory-placeholder"' not in page
 
 
+async def test_me_says_who_is_asking_and_nothing_more(authenticated_client):
+    client = await authenticated_client("ada")
+
+    assert await (await client.get("/api/me")).get_json() == {"uid": "ada", "roles": ["secretary"]}
+
+
 async def test_a_login_grants_its_roles_to_that_session_alone(authenticated_client):
     granted = await authenticated_client("zed", "secretary")
     plain = await authenticated_client("zed")

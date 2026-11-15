@@ -38,7 +38,11 @@ in them (#705, #729, #785, ...) is BAT's, not this repository's.
   telemetry, error messages and test output never contain a person's name or
   address. Fixtures are synthetic - never a real person, not even redacted - so a
   dev instance and the test suites never need production data. Every route that
-  reads the directory is role-gated, not only the ones that change it.
+  reads the directory is role-gated, not only the ones that change it. The
+  directory will hold the only LDAP write bind and an audit log of LDAP changes,
+  and that log will name people. The rules for the bind's credentials and for what
+  the log may record are written with the first code that reads or writes LDAP;
+  nothing here does yet, and until then the rule above has no exception.
 - **Before any interface change, read the design book *and* load the
   `frontend-design` skill.** Both, together, every time.
   [`docs/design-book.html`](docs/design-book.html) is the design system this
@@ -692,7 +696,7 @@ check rather than a thing to remember.
   whether an edit could bring the old shape back. Keep the history when it names a
   shape the code is avoiding and something could reintroduce - `app/config.py` on why an
   instance without an smtp block sends nothing, rather than defaulting to a relay that would
-  address real mail to the people on the directory. Cut it when it only narrates the
+  address real mail to the people it lists. Cut it when it only narrates the
   edit that happened: "this used to be a bare `except`" describes a version nobody can
   reach, and ages into fiction once the thing it compares against is forgotten. Git
   keeps the history either way; a comment earns its past tense by warning, not by

@@ -33,7 +33,7 @@ cd tooling-directory
 ### 2. Give yourself a role
 
 `config.yaml` is gitignored and made from the example. The roles are a configured
-list for now (`roles:` in it; the Secretary is to come from `committee-info.txt` later).
+list for now (`roles:` in it; role answers are to come from the library that the services share).
 Put your own Apache
 id in one of them to see the tool as that role:
 

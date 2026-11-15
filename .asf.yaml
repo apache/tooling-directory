@@ -1,5 +1,5 @@
 github:
-  description: "Directory: LDAP groups, names and member status, the LDAP audit log and the people API"
+  description: "Directory: LDAP groups, names and member status, the LDAP audit log and the people API (in preparation)"
   del_branch_on_merge: true
   features:
     issues: true

@@ -100,8 +100,8 @@ class SMTPConfig(pydantic.BaseModel):
 class RolesConfig(pydantic.BaseModel):
     """Who holds which role. A name that is not a role is an error, not a role nobody holds.
 
-    A stand-in. The Secretary is to come from the offices in committee-info.txt, as BAT derives
-    `Role.SECRETARY`; until that reader exists, the list is configured here.
+    A stand-in. Role answers are to come from the library that the services share
+    (apache/tooling-migration, target-architecture.md); until then the list is configured here.
     """
 
     model_config = pydantic.ConfigDict(extra="forbid")
@@ -119,8 +119,8 @@ class AppConfig(pydantic.BaseModel):
 
     Absent rather than defaulted: in BAT the default was once the Foundation's own relay, so
     every instance that had not been told otherwise - a fresh checkout, the end-to-end harness,
-    a preview - addressed real mail to real people. Here the mail goes to the people on the
-    directory, which is a worse place to make that mistake."""
+    a preview - addressed real mail to real people. Here the mail would go to the people the
+    directory lists, which is a worse place to make that mistake."""
     roles: RolesConfig = RolesConfig()
     logging: LoggingConfig = LoggingConfig()
 

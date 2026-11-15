@@ -63,7 +63,7 @@ async def server_status() -> str:
             ("Database", str(db.db_path())),
             ("Database revision", await _database_revision() or "none"),
             ("Outgoing mail", app_config.smtp.host if app_config.smtp is not None else "none - no smtp block"),
-            ("Secretary", ", ".join(app_config.roles.secretary) or "nobody configured"),
+            ("Secretary", f"{len(app_config.roles.secretary)} configured"),
         ],
     )
 

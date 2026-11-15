@@ -19,7 +19,7 @@ name: Install apt packages
 description: >
   The three or four system packages a job needs, from a cache where there is one and from
   whichever Ubuntu mirror is answering where there is not. No job uses it yet: it is here
-  for the subversion and LDAP packages the directory will need.
+  for the LDAP packages the directory will need.
 
 inputs:
   packages:

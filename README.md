@@ -1,7 +1,7 @@
 # Directory
 
 The directory service: the LDAP groups, the names and member status that the ASF writes into LDAP, the
-LDAP audit log, and the people API that the other services read. It holds the only LDAP write bind. It is
+LDAP audit log, and the people API that the other services read. It will hold the only LDAP write bind. It is
 one of the services that replace [Whimsy](https://github.com/apache/whimsy) and split up the monolithic
 Board Agenda Tool. The plan, the services and what each one owns are in
 [apache/tooling-migration](https://github.com/apache/tooling-migration).

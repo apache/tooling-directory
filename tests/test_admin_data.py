@@ -35,6 +35,27 @@ def test_every_table_is_either_browsable_or_kept_out_and_never_both() -> None:
         assert set(columns) <= {column.name for column in tables[name].columns}, f"{name} lists no such column"
 
 
+async def test_a_table_that_is_in_the_metadata_but_not_listed_is_not_browsable(authenticated_client) -> None:
+    """The browser is opt-in: a table that nobody listed is not read from the metadata, however
+    personal its columns are. A throwaway table stands in for the next model somebody adds."""
+    import sqlalchemy
+
+    admin = await authenticated_client("zed", roles="admin")
+    table = sqlalchemy.Table(
+        "zz_people",
+        DBBase.metadata,
+        sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+        sqlalchemy.Column("fullname", sqlalchemy.String),
+    )
+    try:
+        response = await admin.get("/admin/data/zz_people")
+    finally:
+        DBBase.metadata.remove(table)
+
+    assert response.status_code == 404
+    assert "fullname" not in await response.get_data(as_text=True)
+
+
 async def test_a_table_not_listed_is_not_there(authenticated_client) -> None:
     admin = await authenticated_client("zed", roles="admin")
 

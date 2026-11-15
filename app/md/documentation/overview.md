@@ -1,4 +1,4 @@
-Directory keeps the ASF's LDAP groups, the names and member status that it writes
+Directory will keep the ASF's LDAP groups, the names and member status that it writes
 into LDAP, the LDAP audit log and the people API that the other services read.
 It is one of the services that replace Whimsy; the plan is in
 `apache/tooling-migration`.
