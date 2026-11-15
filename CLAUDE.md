@@ -1,0 +1,3 @@
+# tooling-directory
+
+@AGENTS.md
