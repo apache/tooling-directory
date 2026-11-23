@@ -1,0 +1,17 @@
+[Unit]
+Description=ASF Directory
+
+[Service]
+Type=exec
+WorkingDirectory=/opt/directory
+PIDFile=/opt/directory/state/directory.pid
+ExecStart=/opt/directory/scripts/run.sh
+ExecReload=/bin/kill -SIGINT $MAINPID
+KillSignal=SIGINT
+Restart=always
+User=directory
+Group=directory
+LogLevelMax=info
+
+[Install]
+WantedBy=multi-user.target
