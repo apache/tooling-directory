@@ -18,8 +18,9 @@
 """The data models to be persisted in the database.
 
 The database is workflow state and cache until the directory's source of record is decided
-(apache/tooling-migration, `target-architecture.md`). Every table here is listed by
-the admin data browser (`/admin/data`) without being registered: it reads this metadata.
+(apache/tooling-migration, `target-architecture.md`). A table added here goes into `BROWSABLE` in
+app/admin/routes.py, with the columns an admin may see, or into `NOT_BROWSABLE`:
+tests/test_admin_data.py fails until it is in one of them.
 """
 
 # NOTE: this module deliberately omits the __future__ annotations import: sqlmodel resolves
