@@ -73,8 +73,14 @@ def init_database(app: base.QuartApp) -> None:
         logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
 
         _LOGGER.info("applying database migrations to %s", path)
-        alembic.command.upgrade(alembic_cfg, "head")
-        alembic.command.check(alembic_cfg)
+        try:
+            alembic.command.upgrade(alembic_cfg, "head")
+            alembic.command.check(alembic_cfg)
+        except BaseException:
+            # The server does not run after_serving when before_serving fails: closed here, or the
+            # open aiosqlite connection's worker thread - not a daemon - keeps the failed process alive.
+            await _shutdown_database()
+            raise
         _LOGGER.info("database is at head and matches the models")
 
     @app.after_serving

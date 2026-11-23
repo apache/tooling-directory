@@ -237,3 +237,20 @@ async def test_a_bundle_that_is_there_is_cached_for_good(running_app, tmp_path, 
 
     assert response.status_code == 200
     assert response.headers["Cache-Control"] == "public, max-age=31536000, immutable"
+
+
+async def test_a_startup_that_fails_its_schema_check_closes_the_database(app, monkeypatch):
+    """The server runs no after_serving when before_serving fails: what startup opened, startup closes, or
+    the open connection's worker thread keeps the failed process alive."""
+    import alembic.command
+    import quart.testing
+
+    def differs(*_arguments, **_options):
+        raise RuntimeError("the models and the migrated schema differ")
+
+    monkeypatch.setattr(alembic.command, "check", differs)
+    with pytest.raises(quart.testing.app.LifespanError, match="differ"):
+        await quart.testing.app.TestApp(app, startup_timeout=120, shutdown_timeout=120).startup()
+
+    assert not db.is_ready()
+    assert db._global_engine is None

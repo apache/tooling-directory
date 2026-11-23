@@ -19,6 +19,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from app.admin.routes import BROWSABLE, NOT_BROWSABLE
 from app.db.models import DBBase
 
@@ -77,6 +79,14 @@ async def test_a_listed_table_shows_only_the_columns_it_lists(authenticated_clie
         sqlalchemy.Column("fullname", sqlalchemy.String),
     )
     monkeypatch.setitem(routes.BROWSABLE, "zz_people", ("id",))
+    rendered: dict[str, Any] = {}
+    real_render = routes.quart.render_template
+
+    async def render(template: str, **context: Any) -> str:
+        rendered.update(context)
+        return await real_render(template, **context)
+
+    monkeypatch.setattr(routes.quart, "render_template", render)
     try:
         async with db.session() as session:
             await session.run_sync(lambda sync: table.create(sync.get_bind()))
@@ -91,3 +101,6 @@ async def test_a_listed_table_shows_only_the_columns_it_lists(authenticated_clie
     assert "fullname" not in text
     assert "Grace Example" not in text
     assert ">7<" in text
+    # not only left out of the page: never selected, so never in what the template is handed
+    assert rendered["columns"] == ["id"]
+    assert [list(record) for record in rendered["records"]] == [["id"]]
