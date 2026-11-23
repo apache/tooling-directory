@@ -24,8 +24,9 @@ itself made. Each step happens at a moment of its own, and draws from `random` a
 so the record is the same however the run is split between workers.
 
 **There are no steps yet**, because the app has no route that writes. The first change that adds one
-adds a step for it to `STEPS`, in the same pull request - with a `Behaviour-Harness:` trailer, as for
-any change to the harness - and a step for each reader the write must refuse.
+adds the route. Its step in `STEPS`, and a step for each reader the write must refuse, come in the pull
+request after it, with a `Behaviour-Harness:` trailer: the gate refuses a branch that changes the
+harness and the app at once.
 """
 
 from __future__ import annotations

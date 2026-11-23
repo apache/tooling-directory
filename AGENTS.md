@@ -30,7 +30,9 @@ feature.
   names, uids and addresses of real people, and this repository is public. Logs,
   telemetry, error messages and test output never contain a person's name or
   address. Fixtures are synthetic - never a real person, not even redacted - so a
-  dev instance and the test suites never need production data. Every route that
+  dev instance and the test suites never need production data. The behaviour record
+  is made from the fixtures, and its difference is a CI artifact and a step summary
+  that anybody can read, so it publishes whatever the fixtures hold. Every route that
   reads the directory is role-gated, not only the ones that change it. The
   directory will hold the only LDAP write bind and an audit log of LDAP changes,
   and that log will name people. The rules for the bind's credentials and for what

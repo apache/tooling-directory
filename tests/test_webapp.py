@@ -124,7 +124,11 @@ async def test_an_admin_sees_the_server_status_and_the_data_browser(authenticate
 
     status = await client.get("/admin/server-status")
     assert status.status_code == 200
-    assert "0001" in await status.get_data(as_text=True)
+    text = await status.get_data(as_text=True)
+    assert "0001" in text
+    # Admin is told how many Secretaries there are, never who: the uid is the Secretary's own
+    assert "1 configured" in text
+    assert re.search(r"\bada\b", text) is None
 
     browser = await client.get("/admin/data")
     assert browser.status_code == 200
@@ -196,3 +200,19 @@ async def test_the_session_cookie_is_sent_same_site(running_app):
     cookies = response.headers.getlist("Set-Cookie")
     assert cookies, "the test login sets a session"
     assert all("SameSite=Lax" in cookie for cookie in cookies)
+
+
+@pytest.fixture
+def ldap_supported(monkeypatch):
+    """As asfquart has it once an LDAP library imports, which the directory's LDAP reader will bring."""
+    import asfquart.ldap
+
+    monkeypatch.setattr(asfquart.ldap, "LDAP_SUPPORTED", True)
+
+
+def test_the_app_turns_asfquart_basic_login_off(ldap_supported, app):
+    """asfquart opens a session from a Basic header where LDAP is supported; create_app turns that off
+    (app/basic_auth.py), so an LDAP library does not bring a password check with it."""
+    import asfquart.ldap
+
+    assert asfquart.ldap.LDAP_SUPPORTED is False

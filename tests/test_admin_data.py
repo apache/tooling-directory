@@ -60,3 +60,34 @@ async def test_a_table_not_listed_is_not_there(authenticated_client) -> None:
     admin = await authenticated_client("zed", roles="admin")
 
     assert (await admin.get("/admin/data/anything")).status_code == 404
+
+
+async def test_a_listed_table_shows_only_the_columns_it_lists(authenticated_client, monkeypatch) -> None:
+    """A column `BROWSABLE` does not name is neither selected nor shown, whatever it holds."""
+    import sqlalchemy
+
+    from app import db
+    from app.admin import routes
+
+    admin = await authenticated_client("zed", roles="admin")
+    table = sqlalchemy.Table(
+        "zz_people",
+        DBBase.metadata,
+        sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+        sqlalchemy.Column("fullname", sqlalchemy.String),
+    )
+    monkeypatch.setitem(routes.BROWSABLE, "zz_people", ("id",))
+    try:
+        async with db.session() as session:
+            await session.run_sync(lambda sync: table.create(sync.get_bind()))
+            await session.execute(table.insert().values(id=7, fullname="Grace Example"))
+            await session.commit()
+        response = await admin.get("/admin/data/zz_people")
+    finally:
+        DBBase.metadata.remove(table)
+
+    text = await response.get_data(as_text=True)
+    assert response.status_code == 200
+    assert "fullname" not in text
+    assert "Grace Example" not in text
+    assert ">7<" in text
