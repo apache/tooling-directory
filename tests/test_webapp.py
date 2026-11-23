@@ -216,3 +216,11 @@ def test_the_app_turns_asfquart_basic_login_off(ldap_supported, app):
     import asfquart.ldap
 
     assert asfquart.ldap.LDAP_SUPPORTED is False
+
+
+async def test_a_bundle_that_is_not_there_is_never_cached(running_app):
+    """A hashed bundle is immutable once it exists; the 404 before the next build must not be kept."""
+    response = await running_app.test_client().get("/assets/bundled/not-built-yet.js")
+
+    assert response.status_code == 404
+    assert response.headers["Cache-Control"] == "no-store"
